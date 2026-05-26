@@ -1,0 +1,6 @@
+{
+  "name": "Grantit",
+  "description": "Multi-Agent Grant System application with a collapsible sidebar and state persistence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
