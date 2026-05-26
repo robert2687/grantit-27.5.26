@@ -14,8 +14,8 @@ android {
     applicationId = "com.aistudio.grantsystem.rmd26"
     minSdk = 24
     targetSdk = 36
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = 1 // Increment by 1 with each release (2, 3, 4...)
+    versionName = "1.0.0" // For users (e.g., 1.0.1, 1.1.0)
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
