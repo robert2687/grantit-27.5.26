@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,8 +16,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -95,9 +101,37 @@ fun EvaluationScreen(viewModel: EvaluationViewModel, grantId: String?) {
 }
 
 @Composable
-fun CopywriterScreen(viewModel: CopywriterViewModel) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Proposal Copywriter Workspace", style = MaterialTheme.typography.bodyLarge)
+fun CopywriterScreen() {
+    var generatedText by remember { mutableStateOf("") }
+    var isGenerating by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Proposal Generator Agent", style = MaterialTheme.typography.headlineMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Button(
+                onClick = {
+                    isGenerating = true
+                    // TODO: Trigger your LLM/Agentic Swarm API here
+                    generatedText = "Executive Summary:\n\nRMD26 proposes a novel multi-agent architecture..."
+                    isGenerating = false
+                },
+                enabled = !isGenerating
+            ) {
+                Text(if (isGenerating) "Generating..." else "Draft Proposal")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = generatedText,
+            onValueChange = { generatedText = it },
+            modifier = Modifier.fillMaxSize(),
+            label = { Text("Draft Output") },
+            placeholder = { Text("AI generated proposal will appear here...") }
+        )
     }
 }
 

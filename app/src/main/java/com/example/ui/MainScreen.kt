@@ -435,7 +435,7 @@ fun GrantSystemNavHost(
             EvaluationScreen(viewModel = viewModel(), grantId = grantId)
         }
         composable("copywriter") { 
-            CopywriterScreen(viewModel = viewModel()) 
+            CopywriterScreen() 
         }
         composable("administration") { 
             AdminScreen(viewModel = viewModel()) 

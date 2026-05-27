@@ -28,7 +28,7 @@ fun RMD26GrantSystemApp() {
             val grantId = backStackEntry.arguments?.getString("grantId")
             EvaluationScreen(viewModel = viewModel(), grantId = grantId)
         }
-        composable("copywriter") { CopywriterScreen(viewModel = viewModel()) }
+        composable("copywriter") { CopywriterScreen() }
         composable("administration") { AdminScreen(viewModel = viewModel()) }
         composable("settings") { SettingsScreen() }
     }
