@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj": {}
+    "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj": {}
   },
   "projects": {
-    "D:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj": {
+    "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj",
+        "projectUniqueName": "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj",
         "projectName": "McpServer",
-        "projectPath": "D:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj",
+        "projectPath": "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj",
         "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
-        "outputPath": "D:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\obj\\",
+        "outputPath": "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "D:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\NuGet.Config",
+          "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\NuGet.Config",
           "C:\\Users\\asus\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
