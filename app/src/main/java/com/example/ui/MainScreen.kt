@@ -35,10 +35,12 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -417,10 +419,20 @@ fun GrantSystemNavHost(
         startDestination = startDestination
     ) {
         composable("search") { 
-            SearchScreen(viewModel = viewModel()) 
+            SearchScreen(navController = navController) 
         }
-        composable("evaluation") { 
-            EvaluationScreen(viewModel = viewModel()) 
+        composable(
+            route = "evaluation?grantId={grantId}",
+            arguments = listOf(
+                navArgument("grantId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val grantId = backStackEntry.arguments?.getString("grantId")
+            EvaluationScreen(viewModel = viewModel(), grantId = grantId)
         }
         composable("copywriter") { 
             CopywriterScreen(viewModel = viewModel()) 

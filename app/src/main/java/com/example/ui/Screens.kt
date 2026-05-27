@@ -1,29 +1,96 @@
 package com.example.ui
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 class SearchViewModel : androidx.lifecycle.ViewModel()
 class EvaluationViewModel : androidx.lifecycle.ViewModel()
 class CopywriterViewModel : androidx.lifecycle.ViewModel()
 class AdminViewModel : androidx.lifecycle.ViewModel()
 
-@Composable
-fun SearchScreen(viewModel: SearchViewModel) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Search Workspace", style = MaterialTheme.typography.bodyLarge)
+data class Grant(val id: String, val name: String, val amount: String, val deadline: String)
+
+private const val EVALUATION_ROUTE = "evaluation"
+
+private fun evaluationRoute(grantId: String? = null): String {
+    return if (grantId.isNullOrBlank()) {
+        EVALUATION_ROUTE
+    } else {
+        "$EVALUATION_ROUTE?grantId=$grantId"
     }
 }
 
 @Composable
-fun EvaluationScreen(viewModel: EvaluationViewModel) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Evaluation Workspace", style = MaterialTheme.typography.bodyLarge)
+fun SearchScreen(navController: NavController) {
+    // Mock data - replace with your Agent's API response
+    val grants = listOf(
+        Grant("1", "Horizon Europe: AI Innovation", "€2,500,000", "Oct 15, 2026"),
+        Grant("2", "Digital Europe: Cloud Infrastructure", "€1,200,000", "Nov 01, 2026")
+    )
+
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Global Grant Scanner", style = MaterialTheme.typography.headlineMedium)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(grants) { grant ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { navController.navigate(evaluationRoute(grant.id)) },
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(grant.name, fontWeight = FontWeight.Bold)
+                        Text("Funding: ${grant.amount} | Deadline: ${grant.deadline}")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(onClick = { navController.navigate(evaluationRoute(grant.id)) }) {
+                            Text("Send to Evaluation Agent")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EvaluationScreen(viewModel: EvaluationViewModel, grantId: String?) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text("Evaluation Workspace", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = if (grantId.isNullOrBlank()) {
+                "No grant selected."
+            } else {
+                "Selected Grant ID: $grantId"
+            },
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
 
