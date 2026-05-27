@@ -438,7 +438,7 @@ fun GrantSystemNavHost(
             CopywriterScreen() 
         }
         composable("administration") { 
-            AdminScreen(viewModel = viewModel()) 
+            AdminScreen() 
         }
         composable("settings") { 
             SettingsScreen() 

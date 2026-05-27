@@ -29,7 +29,7 @@ fun RMD26GrantSystemApp() {
             EvaluationScreen(viewModel = viewModel(), grantId = grantId)
         }
         composable("copywriter") { CopywriterScreen() }
-        composable("administration") { AdminScreen(viewModel = viewModel()) }
+        composable("administration") { AdminScreen() }
         composable("settings") { SettingsScreen() }
     }
 }
