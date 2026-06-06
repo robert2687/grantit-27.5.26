@@ -83,7 +83,7 @@ fun MainScreen(viewModel: MainViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val selectedAgent = GrantAgent.entries.find { it.route == currentRoute } ?: GrantAgent.SEARCH
+    val selectedAgent = GrantAgent.fromDestinationRoute(currentRoute)
 
     var isInitialDataLoaded by remember { mutableStateOf(false) }
     var localSidebarVisible by remember { mutableStateOf(true) }
@@ -99,6 +99,7 @@ fun MainScreen(viewModel: MainViewModel) {
 
     val onVisibilityChange: (Boolean) -> Unit = { isVisible ->
         if (localSidebarVisible != isVisible) {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             localSidebarVisible = isVisible
             viewModel.setSidebarVisible(isVisible)
         }
@@ -129,7 +130,7 @@ fun MainScreen(viewModel: MainViewModel) {
                     maxWidth < 840.dp -> WindowSize.MEDIUM
                     else -> WindowSize.EXPANDED
                 }
-                
+
                 val isCompact = windowSize == WindowSize.COMPACT
 
                 // Mobile: Swipeable Modal Navigation Drawer
@@ -170,11 +171,11 @@ fun MainScreen(viewModel: MainViewModel) {
                                 ResponsiveSidebarContent(
                                     isExpanded = true,
                                     selectedAgent = selectedAgent,
-                                    onAgentSelected = { 
-                                        navController.navigate(it.route) { 
+                                    onAgentSelected = {
+                                        navController.navigate(it.route) {
                                             popUpTo(navController.graph.startDestinationRoute ?: "search") { saveState = true }
                                             launchSingleTop = true
-                                            restoreState = true 
+                                            restoreState = true
                                         }
                                         onVisibilityChange(false)
                                     }
@@ -199,7 +200,7 @@ fun MainScreen(viewModel: MainViewModel) {
                             ),
                             label = "SidebarWidth"
                         )
-    
+
                         Box(
                             modifier = Modifier
                                 .width(animatedWidth)
@@ -217,11 +218,11 @@ fun MainScreen(viewModel: MainViewModel) {
                             ResponsiveSidebarContent(
                                 isExpanded = localSidebarVisible,
                                 selectedAgent = selectedAgent,
-                                onAgentSelected = { 
-                                    navController.navigate(it.route) { 
+                                onAgentSelected = {
+                                    navController.navigate(it.route) {
                                         popUpTo(navController.graph.startDestinationRoute ?: "search") { saveState = true }
                                         launchSingleTop = true
-                                        restoreState = true 
+                                        restoreState = true
                                     }
                                 }
                             )
@@ -377,7 +378,7 @@ fun TopBar(
                 letterSpacing = (-0.5).sp
             )
         }
-        
+
         Row(
             modifier = Modifier
                 .height(40.dp)
@@ -412,17 +413,17 @@ fun WorkspaceContent(navController: NavHostController, modifier: Modifier = Modi
 @Composable
 fun GrantSystemNavHost(
     navController: NavHostController,
-    startDestination: String = "search"
+    startDestination: String = GrantAgent.SEARCH.route
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable("search") { 
-            SearchScreen(navController = navController) 
+        composable(GrantAgent.SEARCH.route) {
+            SearchScreen(navController = navController)
         }
         composable(
-            route = "evaluation?grantId={grantId}",
+            route = "${GrantAgent.EVALUATION.route}?grantId={grantId}",
             arguments = listOf(
                 navArgument("grantId") {
                     type = NavType.StringType
@@ -434,14 +435,14 @@ fun GrantSystemNavHost(
             val grantId = backStackEntry.arguments?.getString("grantId")
             EvaluationScreen(viewModel = viewModel(), grantId = grantId)
         }
-        composable("copywriter") { 
-            CopywriterScreen() 
+        composable(GrantAgent.COPYWRITER.route) {
+            CopywriterScreen()
         }
-        composable("administration") { 
-            AdminScreen() 
+        composable(GrantAgent.ADMINISTRATION.route) {
+            AdminScreen()
         }
-        composable("settings") { 
-            SettingsScreen() 
+        composable(GrantAgent.SETTINGS.route) {
+            SettingsScreen()
         }
     }
 }
@@ -451,6 +452,14 @@ enum class GrantAgent(val title: String, val route: String, val icon: ImageVecto
     EVALUATION("Evaluation", "evaluation", Icons.Default.RateReview),
     COPYWRITER("Proposal Copywriter", "copywriter", Icons.Default.Create),
     ADMINISTRATION("Administration", "administration", Icons.Default.AdminPanelSettings),
-    SETTINGS("Settings", "settings", Icons.Default.Settings)
-}
+    SETTINGS("Settings", "settings", Icons.Default.Settings);
 
+    companion object {
+        fun fromDestinationRoute(destinationRoute: String?): GrantAgent {
+            if (destinationRoute.isNullOrBlank()) return SEARCH
+
+            val normalizedRoute = destinationRoute.substringBefore("?").substringBefore("/")
+            return entries.find { it.route == normalizedRoute } ?: SEARCH
+        }
+    }
+}
