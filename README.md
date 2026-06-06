@@ -44,6 +44,27 @@ sdk.dir=/home/<your-user>/Android/Sdk
 ./gradlew :app:testDebugUnitTest
 ```
 
+## Web preview (static mock)
+
+You can preview the UI shell in a browser without running Android:
+
+```bash
+cd web-preview
+python3 -m http.server 4173
+```
+
+Then open:
+
+```bash
+"$BROWSER" http://localhost:4173
+```
+
+Or directly open the file:
+
+```bash
+"$BROWSER" /workspaces/grantit-27.5.26/web-preview/index.html
+```
+
 If `./gradlew` is not executable:
 
 ```bash
