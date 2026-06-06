@@ -16,6 +16,8 @@
 local.properties
 .env
 debug.keystore
+mcp-server/src/bin/
+mcp-server/src/obj/
 
 # .NET build artifacts
 **/obj/
