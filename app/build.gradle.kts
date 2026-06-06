@@ -6,9 +6,11 @@ plugins {
   alias(libs.plugins.secrets)
 }
 
+import java.util.Base64
+
 android {
   namespace = "com.example"
-  compileSdk { version = release(36) { minorApiLevel = 1 } }
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.aistudio.grantsystem.rmd26"
@@ -45,7 +47,10 @@ android {
       signingConfig = signingConfigs.getByName("release")
     }
     debug {
-      signingConfig = signingConfigs.getByName("debugConfig")
+      val debugKeystore = file("${rootDir}/debug.keystore")
+      if (debugKeystore.exists()) {
+        signingConfig = signingConfigs.getByName("debugConfig")
+      }
     }
   }
   compileOptions {
@@ -57,6 +62,27 @@ android {
     buildConfig = true
   }
   testOptions { unitTests { isIncludeAndroidResources = true } }
+}
+
+tasks.register("prepareDebugKeystore") {
+  group = "build setup"
+  description = "Generates debug.keystore from debug.keystore.base64 if present."
+  doLast {
+    val source = rootProject.file("debug.keystore.base64")
+    val target = rootProject.file("debug.keystore")
+
+    if (!source.exists() || target.exists()) return@doLast
+
+    val encoded = source.readText().trim()
+    if (encoded.isEmpty()) return@doLast
+
+    target.writeBytes(Base64.getDecoder().decode(encoded))
+    println("Generated debug.keystore from debug.keystore.base64")
+  }
+}
+
+tasks.named("preBuild") {
+  dependsOn("prepareDebugKeystore")
 }
 
 // Configure the Secrets Gradle Plugin to use .env and .env.example files
