@@ -22,18 +22,18 @@ sdk.dir=/absolute/path/to/Android/Sdk
 sdk.dir=/home/<your-user>/Android/Sdk
 ```
 
-2. If Gradle reports `SDK location not found`, either:
+1. If Gradle reports `SDK location not found`, either:
 
 - set `sdk.dir` in `local.properties`, or
 - export `ANDROID_HOME` to your SDK location.
 
-3. Optional environment variables for release signing:
+1. Optional environment variables for release signing:
 
 - `KEYSTORE_PATH`
 - `STORE_PASSWORD`
 - `KEY_PASSWORD`
 
-4. Debug keystore handling:
+1. Debug keystore handling:
 
 - If `debug.keystore` is missing, build automatically generates it from `debug.keystore.base64`.
 
