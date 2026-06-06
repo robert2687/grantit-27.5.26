@@ -1,21 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj": {}
+    "/tmp/workspace/robert2687/grantit-27.5.26/mcp-server/src/McpServer.csproj": {}
   },
   "projects": {
-    "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj": {
+    "/tmp/workspace/robert2687/grantit-27.5.26/mcp-server/src/McpServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj",
+        "projectUniqueName": "/tmp/workspace/robert2687/grantit-27.5.26/mcp-server/src/McpServer.csproj",
         "projectName": "McpServer",
-        "projectPath": "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\McpServer.csproj",
-        "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
-        "outputPath": "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\src\\obj\\",
+        "projectPath": "/tmp/workspace/robert2687/grantit-27.5.26/mcp-server/src/McpServer.csproj",
+        "packagesPath": "/home/runner/.nuget/packages/",
+        "outputPath": "/tmp/workspace/robert2687/grantit-27.5.26/mcp-server/src/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "d:\\DEVELOPER\\New folder\\grantit-27.5.26\\mcp-server\\NuGet.Config",
-          "C:\\Users\\asus\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/tmp/workspace/robert2687/grantit-27.5.26/mcp-server/NuGet.Config",
+          "/home/runner/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -75,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.300/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
