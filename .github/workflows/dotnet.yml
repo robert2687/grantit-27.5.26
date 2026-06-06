@@ -24,8 +24,11 @@ jobs:
       with:
         dotnet-version: 10.0.x
     - name: Restore dependencies
+      working-directory: mcp-server/src
       run: dotnet restore
     - name: Build
+      working-directory: mcp-server/src
       run: dotnet build --no-restore
     - name: Test
+      working-directory: mcp-server/src
       run: dotnet test --no-build --verbosity normal
