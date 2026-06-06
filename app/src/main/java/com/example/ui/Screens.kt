@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 class SearchViewModel : androidx.lifecycle.ViewModel()
@@ -104,71 +105,27 @@ fun EvaluationScreen(viewModel: EvaluationViewModel, grantId: String?) {
 }
 
 @Composable
+fun CopywriterScreen(viewModel: CopywriterViewModel) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text("Proposal Copywriter Workspace", style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+@Composable
 fun CopywriterScreen() {
-    var generatedText by remember { mutableStateOf("") }
-    var isGenerating by remember { mutableStateOf(false) }
+    CopywriterScreen(viewModel = viewModel())
+}
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Proposal Generator Agent", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Button(
-                onClick = {
-                    isGenerating = true
-                    // TODO: Trigger your LLM/Agentic Swarm API here
-                    generatedText = "Executive Summary:\n\nRMD26 proposes a novel multi-agent architecture..."
-                    isGenerating = false
-                },
-                enabled = !isGenerating
-            ) {
-                Text(if (isGenerating) "Generating..." else "Draft Proposal")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = generatedText,
-            onValueChange = { generatedText = it },
-            modifier = Modifier.fillMaxSize(),
-            label = { Text("Draft Output") },
-            placeholder = { Text("AI generated proposal will appear here...") }
-        )
+@Composable
+fun AdminScreen(viewModel: AdminViewModel) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text("Administration Workspace", style = MaterialTheme.typography.bodyLarge)
     }
 }
 
 @Composable
 fun AdminScreen() {
-    var doc1Checked by remember { mutableStateOf(true) }
-    var doc2Checked by remember { mutableStateOf(false) }
-    var doc3Checked by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Grant Administration", style = MaterialTheme.typography.headlineMedium)
-        Text("Active Deadlines & Compliance", color = MaterialTheme.colorScheme.secondary)
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Horizon Europe - Submission Readiness", style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = doc1Checked, onCheckedChange = { doc1Checked = it })
-                    Text("Technical Annex (Drafted)")
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = doc2Checked, onCheckedChange = { doc2Checked = it })
-                    Text("Budget Justification (Missing)", color = MaterialTheme.colorScheme.error)
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = doc3Checked, onCheckedChange = { doc3Checked = it })
-                    Text("Consortium Agreement (Pending Signatures)")
-                }
-            }
-        }
-    }
+    AdminScreen(viewModel = viewModel())
 }
 
 @Composable
