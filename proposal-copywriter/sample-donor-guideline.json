@@ -1,0 +1,23 @@
+{
+    "donorName": "Civic Impact Foundation",
+    "templatePreference": "foundation_default",
+    "tone": "formal",
+    "requiredKeywords": [
+        "equity",
+        "community resilience",
+        "evidence-based"
+    ],
+    "priorities": [
+        "underserved communities",
+        "measurable outcomes"
+    ],
+    "constraints": [
+        "12-month delivery window",
+        "quarterly reporting"
+    ],
+    "budgetRules": [
+        "Administrative overhead must remain under 15%"
+    ],
+    "contactEmail": "programs@civicimpact.example",
+    "internalNotes": "Prefer organizations with prior grant delivery track record"
+}
