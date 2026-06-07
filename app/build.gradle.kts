@@ -8,16 +8,26 @@ plugins {
 
 import java.util.Base64
 
+fun ProviderFactory.gradlePropertyOrEnv(name: String): String? =
+  gradleProperty(name).orElse(environmentVariable(name)).orNull
+
 android {
   namespace = "com.example"
   compileSdk = 36
 
   defaultConfig {
-    applicationId = "com.aistudio.grantsystem.rmd26"
+    val configuredApplicationId =
+      providers.gradlePropertyOrEnv("APP_APPLICATION_ID") ?: "com.aistudio.grantsystem.rmd26"
+    val configuredVersionCode = (providers.gradlePropertyOrEnv("APP_VERSION_CODE") ?: "1")
+      .toIntOrNull()
+      ?: error("APP_VERSION_CODE must be an integer.")
+    val configuredVersionName = providers.gradlePropertyOrEnv("APP_VERSION_NAME") ?: "1.0.0"
+
+    applicationId = configuredApplicationId
     minSdk = 24
     targetSdk = 36
-    versionCode = 1 // Increment by 1 with each release (2, 3, 4...)
-    versionName = "1.0.0" // For users (e.g., 1.0.1, 1.1.0)
+    versionCode = configuredVersionCode
+    versionName = configuredVersionName
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -35,11 +45,11 @@ android {
 
   signingConfigs {
     create("release") {
-      val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
+      val keystorePath = providers.gradlePropertyOrEnv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
       storeFile = file(keystorePath)
-      storePassword = System.getenv("STORE_PASSWORD")
-      keyAlias = "upload"
-      keyPassword = System.getenv("KEY_PASSWORD")
+      storePassword = providers.gradlePropertyOrEnv("STORE_PASSWORD")
+      keyAlias = providers.gradlePropertyOrEnv("KEY_ALIAS") ?: "upload"
+      keyPassword = providers.gradlePropertyOrEnv("KEY_PASSWORD")
     }
     create("debugConfig") {
       storeFile = file("${rootDir}/debug.keystore")
