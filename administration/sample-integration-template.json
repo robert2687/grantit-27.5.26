@@ -1,0 +1,5 @@
+{
+    "name": "Donor API",
+    "baseUrl": "https://api.example.org/grants",
+    "apiKey": "replace-with-real-api-key"
+}
