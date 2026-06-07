@@ -20,6 +20,17 @@ android {
     versionName = "1.0.0" // For users (e.g., 1.0.1, 1.1.0)
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    val rawGrantAgentBaseUrl = providers
+      .gradleProperty("GRANT_SEARCH_AGENT_BASE_URL")
+      .orElse("http://10.0.2.2:8080/")
+      .get()
+    val grantAgentBaseUrl = if (rawGrantAgentBaseUrl.endsWith('/')) {
+      rawGrantAgentBaseUrl
+    } else {
+      "$rawGrantAgentBaseUrl/"
+    }
+    buildConfigField("String", "GRANT_SEARCH_AGENT_BASE_URL", "\"$grantAgentBaseUrl\"")
   }
 
   signingConfigs {

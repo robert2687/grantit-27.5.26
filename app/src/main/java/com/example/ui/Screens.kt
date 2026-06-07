@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -30,15 +31,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import java.text.NumberFormat
+import java.util.Locale
 
-class SearchViewModel : androidx.lifecycle.ViewModel()
 class EvaluationViewModel : androidx.lifecycle.ViewModel()
 class CopywriterViewModel : androidx.lifecycle.ViewModel()
 class AdminViewModel : androidx.lifecycle.ViewModel()
-
-data class Grant(val id: String, val name: String, val amount: String, val deadline: String)
 
 private const val EVALUATION_ROUTE = "evaluation"
 
@@ -51,19 +52,61 @@ private fun evaluationRoute(grantId: String? = null): String {
 }
 
 @Composable
-fun SearchScreen(navController: NavController) {
-    // Mock data - replace with your Agent's API response
-    val grants = listOf(
-        Grant("1", "Horizon Europe: AI Innovation", "€2,500,000", "Oct 15, 2026"),
-        Grant("2", "Digital Europe: Cloud Infrastructure", "€1,200,000", "Nov 01, 2026")
-    )
+fun SearchScreen(
+    navController: NavController,
+    viewModel: SearchViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val currencyFormatter = remember { NumberFormat.getCurrencyInstance(Locale.GERMANY) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Global Grant Scanner", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(16.dp))
 
+        OutlinedTextField(
+            value = uiState.keyword,
+            onValueChange = viewModel::onKeywordChange,
+            label = { Text("Keyword") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = uiState.minAmount,
+            onValueChange = viewModel::onMinAmountChange,
+            label = { Text("Minimum funding (EUR)") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = viewModel::search) {
+            Text("Search Grants")
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+
+        if (uiState.isLoading) {
+            CircularProgressIndicator()
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
+        uiState.errorMessage?.let { message ->
+            Text(
+                text = "Grant Search Agent error: $message",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+        if (!uiState.isLoading && uiState.results.isEmpty()) {
+            Text(
+                text = "No grants found. Try another keyword or lower minimum amount.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(grants) { grant ->
+            items(uiState.results) { grant ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -72,7 +115,10 @@ fun SearchScreen(navController: NavController) {
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(grant.name, fontWeight = FontWeight.Bold)
-                        Text("Funding: ${grant.amount} | Deadline: ${grant.deadline}")
+                        Text(
+                            "Funding: ${currencyFormatter.format(grant.amountEur)} | " +
+                                "Deadline: ${grant.deadlineIsoDate} | Region: ${grant.region}"
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(onClick = { navController.navigate(evaluationRoute(grant.id)) }) {
                             Text("Send to Evaluation Agent")

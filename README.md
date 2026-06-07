@@ -65,6 +65,30 @@ Or directly open the file:
 "$BROWSER" /workspaces/grantit-27.5.26/web-preview/index.html
 ```
 
+## Grant Search Agent integration
+
+The Android app `Search` screen now calls a real Grant Search Agent endpoint.
+
+### Start the local Grant Search Agent (MCP server)
+
+```bash
+cd mcp-server/src
+dotnet run
+```
+
+This exposes:
+
+- `GET /api/agents/grant-search?keyword=<text>&minAmountEur=<number>`
+
+### Android base URL
+
+- Default base URL is `http://10.0.2.2:8080/` (Android emulator to host machine).
+- To override it, pass a Gradle property:
+
+```bash
+./gradlew :app:assembleDebug -PGRANT_SEARCH_AGENT_BASE_URL=http://<host>:8080/
+```
+
 If `./gradlew` is not executable:
 
 ```bash
