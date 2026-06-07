@@ -23,3 +23,5 @@ mcp-server/src/obj/
 # .NET build artifacts
 **/obj/
 **/bin/
+
+evaluation-workspace/node_modules/
