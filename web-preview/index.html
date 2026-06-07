@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grantit Web Preview</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <button id="menuFab" class="menu-fab" aria-label="Toggle menu">☰</button>
+        <h1>Grantit</h1>
+        <button id="menuToggle" class="pill-toggle">Hide Menu</button>
+      </header>
+
+      <main class="main-layout">
+        <aside id="sidebar" class="sidebar expanded" aria-label="Navigation sidebar">
+          <div class="sidebar-header">
+            <p class="eyebrow">AGENTS</p>
+            <h2>Grantit</h2>
+            <p>Multi-Agent Grant System</p>
+          </div>
+
+          <nav id="nav" class="nav-list">
+            <button class="nav-item active" data-route="search">🔎 Grant Search</button>
+            <button class="nav-item" data-route="evaluation">📝 Evaluation</button>
+            <button class="nav-item" data-route="copywriter">✍️ Proposal Copywriter</button>
+            <button class="nav-item" data-route="administration">🛡️ Administration</button>
+            <button class="nav-item" data-route="settings">⚙️ Settings</button>
+          </nav>
+        </aside>
+
+        <section id="workspace" class="workspace">
+          <!-- populated by script.js -->
+        </section>
+      </main>
+    </div>
+
+    <template id="search-template">
+      <div class="screen">
+        <h2>Global Grant Scanner</h2>
+        <div class="cards" id="grantCards"></div>
+      </div>
+    </template>
+
+    <template id="evaluation-template">
+      <div class="screen">
+        <h2>Evaluation Workspace</h2>
+        <p id="selectedGrantText">No grant selected.</p>
+      </div>
+    </template>
+
+    <template id="copywriter-template">
+      <div class="screen centered">
+        <h2>Proposal Copywriter Workspace</h2>
+      </div>
+    </template>
+
+    <template id="administration-template">
+      <div class="screen centered">
+        <h2>Administration Workspace</h2>
+      </div>
+    </template>
+
+    <template id="settings-template">
+      <div class="screen">
+        <h2>System Settings</h2>
+        <div class="settings-row">
+          <span>Deadline Push Notifications</span>
+          <label class="switch">
+            <input type="checkbox" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <hr />
+        <label for="apiKey" class="label">Agent API Configuration</label>
+        <input id="apiKey" class="text-input" placeholder="Cloud Agent API Key" />
+        <button class="save-btn">Save Settings</button>
+      </div>
+    </template>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

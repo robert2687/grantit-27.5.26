@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -30,14 +31,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import java.text.NumberFormat
+import java.util.Locale
 
-class SearchViewModel : androidx.lifecycle.ViewModel()
 class EvaluationViewModel : androidx.lifecycle.ViewModel()
 class CopywriterViewModel : androidx.lifecycle.ViewModel()
 class AdminViewModel : androidx.lifecycle.ViewModel()
-
-data class Grant(val id: String, val name: String, val amount: String, val deadline: String)
 
 private const val EVALUATION_ROUTE = "evaluation"
 
@@ -50,19 +52,61 @@ private fun evaluationRoute(grantId: String? = null): String {
 }
 
 @Composable
-fun SearchScreen(navController: NavController) {
-    // Mock data - replace with your Agent's API response
-    val grants = listOf(
-        Grant("1", "Horizon Europe: AI Innovation", "€2,500,000", "Oct 15, 2026"),
-        Grant("2", "Digital Europe: Cloud Infrastructure", "€1,200,000", "Nov 01, 2026")
-    )
+fun SearchScreen(
+    navController: NavController,
+    viewModel: SearchViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val currencyFormatter = remember { NumberFormat.getCurrencyInstance(Locale.GERMANY) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Global Grant Scanner", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(16.dp))
 
+        OutlinedTextField(
+            value = uiState.keyword,
+            onValueChange = viewModel::onKeywordChange,
+            label = { Text("Keyword") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = uiState.minAmount,
+            onValueChange = viewModel::onMinAmountChange,
+            label = { Text("Minimum funding (EUR)") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = viewModel::search) {
+            Text("Search Grants")
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+
+        if (uiState.isLoading) {
+            CircularProgressIndicator()
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
+        uiState.errorMessage?.let { message ->
+            Text(
+                text = "Grant Search Agent error: $message",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+        if (!uiState.isLoading && uiState.results.isEmpty()) {
+            Text(
+                text = "No grants found. Try another keyword or lower minimum amount.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(grants) { grant ->
+            items(uiState.results) { grant ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -71,7 +115,10 @@ fun SearchScreen(navController: NavController) {
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(grant.name, fontWeight = FontWeight.Bold)
-                        Text("Funding: ${grant.amount} | Deadline: ${grant.deadline}")
+                        Text(
+                            "Funding: ${currencyFormatter.format(grant.amountEur)} | " +
+                                "Deadline: ${grant.deadlineIsoDate} | Region: ${grant.region}"
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(onClick = { navController.navigate(evaluationRoute(grant.id)) }) {
                             Text("Send to Evaluation Agent")
@@ -104,71 +151,27 @@ fun EvaluationScreen(viewModel: EvaluationViewModel, grantId: String?) {
 }
 
 @Composable
+fun CopywriterScreen(viewModel: CopywriterViewModel) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text("Proposal Copywriter Workspace", style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+@Composable
 fun CopywriterScreen() {
-    var generatedText by remember { mutableStateOf("") }
-    var isGenerating by remember { mutableStateOf(false) }
+    CopywriterScreen(viewModel = viewModel())
+}
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Proposal Generator Agent", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Button(
-                onClick = {
-                    isGenerating = true
-                    // TODO: Trigger your LLM/Agentic Swarm API here
-                    generatedText = "Executive Summary:\n\nRMD26 proposes a novel multi-agent architecture..."
-                    isGenerating = false
-                },
-                enabled = !isGenerating
-            ) {
-                Text(if (isGenerating) "Generating..." else "Draft Proposal")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = generatedText,
-            onValueChange = { generatedText = it },
-            modifier = Modifier.fillMaxSize(),
-            label = { Text("Draft Output") },
-            placeholder = { Text("AI generated proposal will appear here...") }
-        )
+@Composable
+fun AdminScreen(viewModel: AdminViewModel) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text("Administration Workspace", style = MaterialTheme.typography.bodyLarge)
     }
 }
 
 @Composable
 fun AdminScreen() {
-    var doc1Checked by remember { mutableStateOf(true) }
-    var doc2Checked by remember { mutableStateOf(false) }
-    var doc3Checked by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Grant Administration", style = MaterialTheme.typography.headlineMedium)
-        Text("Active Deadlines & Compliance", color = MaterialTheme.colorScheme.secondary)
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Horizon Europe - Submission Readiness", style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = doc1Checked, onCheckedChange = { doc1Checked = it })
-                    Text("Technical Annex (Drafted)")
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = doc2Checked, onCheckedChange = { doc2Checked = it })
-                    Text("Budget Justification (Missing)", color = MaterialTheme.colorScheme.error)
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = doc3Checked, onCheckedChange = { doc3Checked = it })
-                    Text("Consortium Agreement (Pending Signatures)")
-                }
-            }
-        }
-    }
+    AdminScreen(viewModel = viewModel())
 }
 
 @Composable

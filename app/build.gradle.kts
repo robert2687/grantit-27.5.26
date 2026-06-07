@@ -6,18 +6,31 @@ plugins {
   alias(libs.plugins.secrets)
 }
 
+import java.util.Base64
+
 android {
   namespace = "com.example"
-  compileSdk { version = release(36) { minorApiLevel = 1 } }
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.aistudio.grantsystem.rmd26"
     minSdk = 24
     targetSdk = 36
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = 1 // Increment by 1 with each release (2, 3, 4...)
+    versionName = "1.0.0" // For users (e.g., 1.0.1, 1.1.0)
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    val rawGrantAgentBaseUrl = providers
+      .gradleProperty("GRANT_SEARCH_AGENT_BASE_URL")
+      .orElse("http://10.0.2.2:8080/")
+      .get()
+    val grantAgentBaseUrl = if (rawGrantAgentBaseUrl.endsWith('/')) {
+      rawGrantAgentBaseUrl
+    } else {
+      "$rawGrantAgentBaseUrl/"
+    }
+    buildConfigField("String", "GRANT_SEARCH_AGENT_BASE_URL", "\"$grantAgentBaseUrl\"")
   }
 
   signingConfigs {
@@ -45,7 +58,10 @@ android {
       signingConfig = signingConfigs.getByName("release")
     }
     debug {
-      signingConfig = signingConfigs.getByName("debugConfig")
+      val debugKeystore = file("${rootDir}/debug.keystore")
+      if (debugKeystore.exists()) {
+        signingConfig = signingConfigs.getByName("debugConfig")
+      }
     }
   }
   compileOptions {
@@ -57,6 +73,27 @@ android {
     buildConfig = true
   }
   testOptions { unitTests { isIncludeAndroidResources = true } }
+}
+
+tasks.register("prepareDebugKeystore") {
+  group = "build setup"
+  description = "Generates debug.keystore from debug.keystore.base64 if present."
+  doLast {
+    val source = rootProject.file("debug.keystore.base64")
+    val target = rootProject.file("debug.keystore")
+
+    if (!source.exists() || target.exists()) return@doLast
+
+    val encoded = source.readText().trim()
+    if (encoded.isEmpty()) return@doLast
+
+    target.writeBytes(Base64.getDecoder().decode(encoded))
+    println("Generated debug.keystore from debug.keystore.base64")
+  }
+}
+
+tasks.named("preBuild") {
+  dependsOn("prepareDebugKeystore")
 }
 
 // Configure the Secrets Gradle Plugin to use .env and .env.example files

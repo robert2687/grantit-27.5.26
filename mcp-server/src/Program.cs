@@ -29,6 +29,14 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 app.MapMcp();
 
+app.MapGet("/api/agents/grant-search", (
+    string keyword,
+    decimal? minAmountEur) =>
+{
+    var grants = GrantDiscoveryTools.SearchGrants(keyword, minAmountEur);
+    return Results.Ok(grants);
+});
+
 app.MapGet("/status", () => Results.Ok(new
 {
     name = "grantit-mcp-server",
