@@ -1,0 +1,92 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SystemSettings",
+    "type": "object",
+    "required": [
+        "scan_frequency",
+        "source_whitelist",
+        "source_blacklist",
+        "notification_thresholds",
+        "backup_schedule",
+        "retention_policy"
+    ],
+    "properties": {
+        "scan_frequency": {
+            "type": "string"
+        },
+        "source_whitelist": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "source_blacklist": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "notification_thresholds": {
+            "type": "object",
+            "required": [
+                "low",
+                "medium",
+                "high"
+            ],
+            "properties": {
+                "low": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "medium": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "high": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                }
+            }
+        },
+        "backup_schedule": {
+            "type": "object",
+            "required": [
+                "frequency",
+                "time"
+            ],
+            "properties": {
+                "frequency": {
+                    "type": "string",
+                    "enum": [
+                        "daily",
+                        "weekly",
+                        "monthly"
+                    ]
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "retention_policy": {
+            "type": "object",
+            "required": [
+                "days",
+                "archiveAfterDays"
+            ],
+            "properties": {
+                "days": {
+                    "type": "number",
+                    "minimum": 1
+                },
+                "archiveAfterDays": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        }
+    }
+}
