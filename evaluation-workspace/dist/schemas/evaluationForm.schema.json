@@ -1,0 +1,85 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.org/schemas/evaluation-form.schema.json",
+    "title": "GrantEvaluationForm",
+    "type": "object",
+    "required": [
+        "grantTitle",
+        "funder",
+        "category",
+        "deadline",
+        "budgetRange",
+        "organizationCapacity",
+        "scores"
+    ],
+    "properties": {
+        "grantTitle": {
+            "type": "string"
+        },
+        "funder": {
+            "type": "string"
+        },
+        "category": {
+            "type": "string"
+        },
+        "geography": {
+            "type": "string"
+        },
+        "deadline": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "budgetRange": {
+            "type": "string"
+        },
+        "organizationCapacity": {
+            "type": "string"
+        },
+        "keyStrengths": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "riskFlags": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "notes": {
+            "type": "string"
+        },
+        "scores": {
+            "type": "object",
+            "required": [
+                "relevance",
+                "capacity_fit",
+                "success_probability",
+                "budget_fit"
+            ],
+            "properties": {
+                "relevance": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "capacity_fit": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "success_probability": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "budget_fit": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                }
+            }
+        }
+    }
+}

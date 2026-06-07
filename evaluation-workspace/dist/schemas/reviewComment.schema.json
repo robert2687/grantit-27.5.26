@@ -1,0 +1,58 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.org/schemas/review-comment.schema.json",
+    "title": "ReviewComment",
+    "type": "object",
+    "required": [
+        "reviewerId",
+        "comment",
+        "scores"
+    ],
+    "properties": {
+        "reviewerId": {
+            "type": "string"
+        },
+        "comment": {
+            "type": "string",
+            "minLength": 3
+        },
+        "scores": {
+            "type": "object",
+            "required": [
+                "relevance",
+                "capacity_fit",
+                "success_probability",
+                "budget_fit"
+            ],
+            "properties": {
+                "relevance": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "capacity_fit": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "success_probability": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "budget_fit": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                }
+            }
+        },
+        "attachments": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "format": "uri"
+            }
+        }
+    }
+}
