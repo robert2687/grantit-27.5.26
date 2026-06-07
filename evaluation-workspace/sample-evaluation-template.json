@@ -1,0 +1,21 @@
+{
+    "templateId": "grant-evaluation-v1",
+    "version": "1.0.0",
+    "weights": {
+        "relevance": 0.4,
+        "capacity_fit": 0.2,
+        "success_probability": 0.3,
+        "budget_fit": 0.1
+    },
+    "criteriaDescriptions": {
+        "relevance": "How strongly this grant aligns with our mission and program goals.",
+        "capacity_fit": "How well our team/resources can execute this grant if awarded.",
+        "success_probability": "Estimated chance of success based on fit, evidence, and track record.",
+        "budget_fit": "How well funding range and constraints match our budget needs."
+    },
+    "commentGuidance": [
+        "State one evidence-backed reason for your relevance score.",
+        "Call out one execution risk and mitigation plan.",
+        "Summarize why the budget is realistic or risky."
+    ]
+}
