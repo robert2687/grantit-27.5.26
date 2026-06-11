@@ -32,7 +32,7 @@
             "in": "query",
             "required": false,
             "type": "number",
-            "format": "decimal",
+            "format": "double",
             "description": "Optional minimum grant amount in EUR."
           }
         ],
