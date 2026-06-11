@@ -130,9 +130,9 @@
         },
         "amountEur": {
           "type": "number",
-          "format": "decimal",
+          "format": "double",
           "description": "Grant amount in EUR."
-        },
+        }
         "deadlineIsoDate": {
           "type": "string",
           "description": "Application deadline (ISO 8601 date)."
