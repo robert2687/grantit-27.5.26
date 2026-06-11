@@ -150,6 +150,38 @@ If `./gradlew` is not executable:
 chmod +x gradlew
 ```
 
+## Power Apps custom connector
+
+The `powerapps-connector/` directory contains a ready-to-import custom connector for Microsoft Power Apps / Power Automate.
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `apiDefinition.swagger.json` | OpenAPI 2.0 definition — describes all four REST operations |
+| `apiProperties.json` | Power Platform connector metadata (icon colour, OAuth settings) |
+
+### Importing the connector
+
+3. If you plan to add Azure AD authentication on the server, replace `YOUR_AZURE_AD_CLIENT_ID` in `apiProperties.json` with your app registration's client ID; otherwise delete the `connectionParameters` block to use no-auth.
+
+### Available operations
+
+| Operation | Method | Path | Description |
+|-----------|--------|------|-------------|
+| `SearchGrants` | GET | `/api/agents/grant-search` | Find grants by keyword and optional minimum EUR amount |
+| `EvaluateReadiness` | POST | `/api/agents/evaluate-readiness` | Score proposal readiness (0–100) |
+| `BuildExecutiveSummary` | POST | `/api/agents/build-executive-summary` | Draft a grant executive summary |
+| `GetStatus` | GET | `/status` | Check server health |
+
+### Using the connector in Power Automate
+
+Example flow to search for EU grants and check readiness:
+
+1. Add **Grantit → SearchGrants** step with `keyword = "AI"`.
+2. Loop over results and add **Grantit → EvaluateReadiness** with the checklist values.
+3. If `readinessScore` ≥ 90, add **Grantit → BuildExecutiveSummary** and send the output by email.
+
 ## Notes
 
 - App entrypoint is `RMD26GrantSystemApp` in `app/src/main/java/com/example/ui/RMD26GrantSystemApp.kt`.
