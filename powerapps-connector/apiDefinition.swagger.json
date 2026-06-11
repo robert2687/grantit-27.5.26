@@ -1,0 +1,238 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Grantit",
+    "description": "Multi-Agent Grant System — discover grants, evaluate submission readiness, and draft executive summaries.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Grantit Support"
+    }
+  },
+  "host": "your-grantit-host.azurewebsites.net",
+  "basePath": "/",
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/agents/grant-search": {
+      "get": {
+        "summary": "Search Grants",
+        "description": "Find grants by keyword and optional minimum funding amount in EUR.",
+        "operationId": "SearchGrants",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Keyword in the grant title."
+          },
+          {
+            "name": "minAmountEur",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "decimal",
+            "description": "Optional minimum grant amount in EUR."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of matching grants.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GrantItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/evaluate-readiness": {
+      "post": {
+        "summary": "Evaluate Submission Readiness",
+        "description": "Evaluates submission readiness based on key proposal checklist inputs.",
+        "operationId": "EvaluateReadiness",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EvaluateReadinessRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Readiness evaluation result.",
+            "schema": {
+              "$ref": "#/definitions/EvaluationResult"
+            }
+          }
+        }
+      }
+    },
+    "/api/agents/build-executive-summary": {
+      "post": {
+        "summary": "Build Executive Summary",
+        "description": "Creates a compact proposal executive summary draft for a selected grant.",
+        "operationId": "BuildExecutiveSummary",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BuildExecutiveSummaryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Generated executive summary.",
+            "schema": {
+              "$ref": "#/definitions/ExecutiveSummaryResponse"
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "Get Server Status",
+        "description": "Returns the current health and status of the Grantit MCP server.",
+        "operationId": "GetStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Server status information.",
+            "schema": {
+              "$ref": "#/definitions/ServerStatus"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "GrantItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique grant identifier."
+        },
+        "name": {
+          "type": "string",
+          "description": "Grant title."
+        },
+        "amountEur": {
+          "type": "number",
+          "format": "decimal",
+          "description": "Grant amount in EUR."
+        },
+        "deadlineIsoDate": {
+          "type": "string",
+          "description": "Application deadline (ISO 8601 date)."
+        },
+        "region": {
+          "type": "string",
+          "description": "Eligible region (e.g. EU, Global)."
+        }
+      }
+    },
+    "EvaluateReadinessRequest": {
+      "type": "object",
+      "required": ["grantId", "technicalAnnexReady", "budgetJustificationReady", "consortiumAgreementSigned"],
+      "properties": {
+        "grantId": {
+          "type": "string",
+          "description": "Grant identifier."
+        },
+        "technicalAnnexReady": {
+          "type": "boolean",
+          "description": "Whether technical annex is drafted."
+        },
+        "budgetJustificationReady": {
+          "type": "boolean",
+          "description": "Whether budget justification is complete."
+        },
+        "consortiumAgreementSigned": {
+          "type": "boolean",
+          "description": "Whether consortium agreement is signed."
+        }
+      }
+    },
+    "EvaluationResult": {
+      "type": "object",
+      "properties": {
+        "grantId": {
+          "type": "string",
+          "description": "Grant identifier."
+        },
+        "readinessScore": {
+          "type": "integer",
+          "description": "Readiness score from 0 to 100."
+        },
+        "decision": {
+          "type": "string",
+          "description": "Submission decision: Ready to submit, Needs final improvements, or Not ready."
+        }
+      }
+    },
+    "BuildExecutiveSummaryRequest": {
+      "type": "object",
+      "required": ["grantTitle", "organization", "problem", "approach"],
+      "properties": {
+        "grantTitle": {
+          "type": "string",
+          "description": "Grant title."
+        },
+        "organization": {
+          "type": "string",
+          "description": "Organization name."
+        },
+        "problem": {
+          "type": "string",
+          "description": "Core problem statement."
+        },
+        "approach": {
+          "type": "string",
+          "description": "High-level solution approach."
+        }
+      }
+    },
+    "ExecutiveSummaryResponse": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Generated executive summary text."
+        }
+      }
+    },
+    "ServerStatus": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Server name."
+        },
+        "status": {
+          "type": "string",
+          "description": "Server status."
+        },
+        "transport": {
+          "type": "string",
+          "description": "MCP transport type."
+        },
+        "mcpPath": {
+          "type": "string",
+          "description": "MCP endpoint path."
+        }
+      }
+    }
+  }
+}
