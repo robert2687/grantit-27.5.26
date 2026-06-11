@@ -18,7 +18,7 @@
           "description": "Sign in to Grantit using your Azure AD account.",
           "tooltip": "Provide your Azure AD credentials.",
           "constraints": {
-            "required": "false"
+            "required": false
           }
         }
       }
