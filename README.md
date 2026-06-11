@@ -163,11 +163,7 @@ The `powerapps-connector/` directory contains a ready-to-import custom connector
 
 ### Importing the connector
 
-1. Deploy the MCP server to Azure (see `mcp-server/azure.yaml`) and note the HTTPS hostname (e.g. `my-grantit.azurewebsites.net`).
-2. Open `powerapps-connector/apiDefinition.swagger.json` and replace `your-grantit-host.azurewebsites.net` with your actual hostname.
-3. If you want Azure AD authentication, replace `YOUR_AZURE_AD_CLIENT_ID` in `apiProperties.json` with your app registration's client ID; otherwise delete the `connectionParameters` block to use no-auth.
-4. In [make.powerapps.com](https://make.powerapps.com), go to **Data → Custom connectors → New custom connector → Import an OpenAPI file**.
-5. Upload `apiDefinition.swagger.json` and complete the wizard.
+3. If you plan to add Azure AD authentication on the server, replace `YOUR_AZURE_AD_CLIENT_ID` in `apiProperties.json` with your app registration's client ID; otherwise delete the `connectionParameters` block to use no-auth.
 
 ### Available operations
 
