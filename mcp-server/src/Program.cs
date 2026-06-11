@@ -49,6 +49,14 @@ app.MapPost("/api/agents/evaluate-readiness", (EvaluateReadinessRequest req) =>
 
 app.MapPost("/api/agents/build-executive-summary", (BuildExecutiveSummaryRequest req) =>
 {
+    if (string.IsNullOrWhiteSpace(req.GrantTitle) ||
+        string.IsNullOrWhiteSpace(req.Organization) ||
+        string.IsNullOrWhiteSpace(req.Problem) ||
+        string.IsNullOrWhiteSpace(req.Approach))
+    {
+        return Results.BadRequest(new { error = "grantTitle, organization, problem, and approach are required." });
+    }
+
     var summary = ProposalDraftTools.BuildExecutiveSummary(
         req.GrantTitle,
         req.Organization,
