@@ -185,7 +185,7 @@ body {
 }
 .status-badge { margin-left: auto; border-radius: 999px; padding: 8px 12px; background: #fff3cd; color: #7a5300; font-weight: 800; }
 .score-card { display: flex; align-items: center; gap: 18px; margin-top: 20px; }
-.score-ring { width: 94px; height: 94px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--secondary) 84%, #e8e4ee 0); color: var(--secondary); font-size: 1.7rem; font-weight: 850; }
+.score-ring { width: 94px; height: 94px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--secondary) calc(var(--score, 84) * 1%), #e8e4ee 0); color: var(--secondary); font-size: 1.7rem; font-weight: 850; }
 .score-ring span { background: #fff; border-radius: 50%; width: 68px; height: 68px; display: grid; place-items: center; }
 .draft-card span { color: var(--accent); font-weight: 850; }
 .draft-card h3 { margin-bottom: 6px; }
