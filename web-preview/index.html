@@ -9,9 +9,17 @@
   <body>
     <div class="app-shell">
       <header class="topbar">
-        <button id="menuFab" class="menu-fab" aria-label="Toggle menu">☰</button>
-        <h1>Grantit</h1>
-        <button id="menuToggle" class="pill-toggle">Hide Menu</button>
+        <div class="brand-lockup">
+          <button id="menuFab" class="menu-fab" aria-label="Toggle menu">☰</button>
+          <div>
+            <p class="eyebrow">Preview</p>
+            <h1>Grantit</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <span class="sync-chip">Live agent mesh</span>
+          <button id="menuToggle" class="pill-toggle">Hide Menu</button>
+        </div>
       </header>
 
       <main class="main-layout">
@@ -31,7 +39,7 @@
           </nav>
         </aside>
 
-        <section id="workspace" class="workspace">
+        <section id="workspace" class="workspace" aria-live="polite">
           <!-- populated by script.js -->
         </section>
       </main>
@@ -39,35 +47,95 @@
 
     <template id="search-template">
       <div class="screen">
-        <h2>Global Grant Scanner</h2>
+        <section class="hero-panel">
+          <div>
+            <p class="eyebrow">Global Grant Scanner</p>
+            <h2>Find, qualify, and route funding opportunities.</h2>
+            <p>Monitor open calls, score strategic fit, and send promising grants to the evaluation workspace.</p>
+          </div>
+          <div class="hero-stat">
+            <span id="openGrantCount">0</span>
+            <small>open matches</small>
+          </div>
+        </section>
+        <div class="metric-grid">
+          <article><strong>€4.9M</strong><span>tracked funding</span></article>
+          <article><strong>84%</strong><span>average mission fit</span></article>
+          <article><strong>3</strong><span>deadlines this quarter</span></article>
+        </div>
         <div class="cards" id="grantCards"></div>
       </div>
     </template>
 
     <template id="evaluation-template">
       <div class="screen">
-        <h2>Evaluation Workspace</h2>
-        <p id="selectedGrantText">No grant selected.</p>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Evaluation Workspace</p>
+            <h2>Review readiness and compliance</h2>
+          </div>
+          <span id="selectedGrantBadge" class="status-badge">No grant selected</span>
+        </div>
+        <p id="selectedGrantText" class="lede" aria-live="polite" aria-atomic="true">No grant selected.</p>
+        <div class="score-card">
+          <div class="score-ring"><span id="fitScore">--</span></div>
+          <div>
+            <h3>Strategic fit score</h3>
+            <p id="fitSummary">Choose a grant from search to generate the evaluation summary.</p>
+          </div>
+        </div>
       </div>
     </template>
 
     <template id="copywriter-template">
-      <div class="screen centered">
-        <h2>Proposal Copywriter Workspace</h2>
+      <div class="screen">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Proposal Copywriter</p>
+            <h2>Draft narrative sections from the selected opportunity.</h2>
+          </div>
+        </div>
+        <div class="draft-layout">
+          <article class="draft-card"><span>01</span><h3>Need statement</h3><p>Summarizes beneficiary needs and funder alignment.</p></article>
+          <article class="draft-card"><span>02</span><h3>Project plan</h3><p>Builds milestones, deliverables, and staffing notes.</p></article>
+          <article class="draft-card"><span>03</span><h3>Budget narrative</h3><p>Checks assumptions against grant limits and rules.</p></article>
+        </div>
       </div>
     </template>
 
     <template id="administration-template">
-      <div class="screen centered">
-        <h2>Administration Workspace</h2>
+      <div class="screen">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Administration</p>
+            <h2>Track governance, approvals, and integrations.</h2>
+          </div>
+        </div>
+        <ul class="timeline">
+          <li><strong>Eligibility review</strong><span>Ready for program officer sign-off</span></li>
+          <li><strong>Partner documents</strong><span>2 of 4 uploads received</span></li>
+          <li><strong>Submission package</strong><span>Power Apps connector configured</span></li>
+        </ul>
       </div>
     </template>
 
     <template id="settings-template">
-      <div class="screen">
-        <h2>System Settings</h2>
+      <div class="screen settings-screen">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">System Settings</p>
+            <h2>Configure agent handoffs and notifications.</h2>
+          </div>
+        </div>
         <div class="settings-row">
           <span>Deadline Push Notifications</span>
+          <label class="switch">
+            <input type="checkbox" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="settings-row">
+          <span>Auto-route high-fit grants</span>
           <label class="switch">
             <input type="checkbox" checked />
             <span class="slider"></span>

@@ -3,13 +3,25 @@ const grants = [
     id: "1",
     name: "Horizon Europe: AI Innovation",
     amount: "€2,500,000",
-    deadline: "Oct 15, 2026"
+    deadline: "Oct 15, 2026",
+    score: 91,
+    theme: "Responsible AI tooling for public benefit"
   },
   {
     id: "2",
     name: "Digital Europe: Cloud Infrastructure",
     amount: "€1,200,000",
-    deadline: "Nov 01, 2026"
+    deadline: "Nov 01, 2026",
+    score: 84,
+    theme: "Secure shared cloud capacity"
+  },
+  {
+    id: "3",
+    name: "EIC Accelerator: GovTech Pilots",
+    amount: "€1,200,000",
+    deadline: "Dec 08, 2026",
+    score: 78,
+    theme: "Pilot-ready civic technology deployments"
   }
 ];
 
@@ -28,6 +40,10 @@ const menuToggle = document.getElementById("menuToggle");
 function render() {
   renderSidebar();
   renderScreen();
+}
+
+function getSelectedGrant() {
+  return grants.find((grant) => grant.id === state.selectedGrantId);
 }
 
 function renderSidebar() {
@@ -65,14 +81,19 @@ function cloneTemplate(id) {
 }
 
 function renderSearch(container) {
+  container.querySelector("#openGrantCount").textContent = grants.length;
   const cards = container.querySelector("#grantCards");
+
   grants.forEach((grant) => {
     const card = document.createElement("article");
     card.className = "card";
     card.innerHTML = `
-      <h3>${grant.name}</h3>
-      <p>Funding: ${grant.amount} | Deadline: ${grant.deadline}</p>
-      <button type="button">Send to Evaluation Agent</button>
+      <div>
+        <h3>${grant.name}</h3>
+        <p>${grant.theme}</p>
+        <p>Funding: ${grant.amount} · Deadline: ${grant.deadline} · Fit: ${grant.score}%</p>
+      </div>
+      <button type="button">Send to Evaluation</button>
     `;
 
     card.querySelector("button").onclick = () => {
@@ -86,10 +107,22 @@ function renderSearch(container) {
 }
 
 function renderEvaluation(container) {
+  const selectedGrant = getSelectedGrant();
+  const badge = container.querySelector("#selectedGrantBadge");
   const text = container.querySelector("#selectedGrantText");
-  text.textContent = state.selectedGrantId
-    ? `Selected Grant ID: ${state.selectedGrantId}`
-    : "No grant selected.";
+  const fitScore = container.querySelector("#fitScore");
+  const fitSummary = container.querySelector("#fitSummary");
+
+  if (!selectedGrant) {
+    badge.textContent = "No grant selected";
+    text.textContent = "No grant selected. Select an opportunity from Grant Search to preview the evaluation handoff.";
+    return;
+  }
+
+  badge.textContent = `Grant ${selectedGrant.id}`;
+  text.textContent = `${selectedGrant.name} is ready for evaluator review with a ${selectedGrant.score}% strategic fit.`;
+  fitScore.textContent = `${selectedGrant.score}`;
+  fitSummary.textContent = `${selectedGrant.theme}. Funding request ${selectedGrant.amount}; next deadline ${selectedGrant.deadline}.`;
 }
 
 function renderScreen() {
